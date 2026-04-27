@@ -4,7 +4,7 @@ header('Content-Type: application/json');
 
 $id = $_POST['id'] ?? 0;
 
-// 🔥 CEK RELASI KE ARTIKEL
+//CEK RELASI KE ARTIKEL
 $cek = mysqli_query($koneksi, "SELECT * FROM artikel WHERE id_kategori='$id'");
 
 if (mysqli_num_rows($cek) > 0) {
@@ -15,7 +15,7 @@ if (mysqli_num_rows($cek) > 0) {
     exit;
 }
 
-// hapus kategori
+//hapus kategori
 $hapus = mysqli_query($koneksi, "DELETE FROM kategori WHERE id='$id'");
 
 if ($hapus) {
