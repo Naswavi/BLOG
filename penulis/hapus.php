@@ -12,45 +12,26 @@ if ($id <= 0) {
     exit;
 }
 
-# CEK APAKAH PUNYA ARTIKEL
-    $cek = mysqli_prepare($koneksi, "SELECT COUNT(*) as total FROM artikel WHERE id_penulis=?");
-    mysqli_stmt_bind_param($cek, "i", $id);
-    mysqli_stmt_execute($cek);
-    $res = mysqli_stmt_get_result($cek);
-    $data = mysqli_fetch_assoc($res);
+// cek apakah penulis dipakai
+$q = mysqli_query($koneksi, "SELECT COUNT(*) as total FROM artikel WHERE id_penulis='$id'");
+$data = mysqli_fetch_assoc($q);
 
 if ($data['total'] > 0) {
     echo json_encode([
         'status' => 'gagal',
-        'pesan' => 'Penulis masih memiliki artikel'
+        'pesan' => 'Penulis tidak dapat dihapus karena masih digunakan pada artikel'
     ]);
     exit;
 }
 
-# AMBIL FOTO 
-    $q = mysqli_prepare($koneksi, "SELECT foto FROM penulis WHERE id=?");
-    mysqli_stmt_bind_param($q, "i", $id);
-    mysqli_stmt_execute($q);
-    $res = mysqli_stmt_get_result($q);
-    $row = mysqli_fetch_assoc($res);
-    
-    $foto = $row['foto'] ?? 'default.png';
+//  hapus
+$hapus = mysqli_query($koneksi, "DELETE FROM penulis WHERE id='$id'");
 
-# HAPUS DATA 
-$stmt = mysqli_prepare($koneksi, "DELETE FROM penulis WHERE id=?");
-mysqli_stmt_bind_param($stmt, "i", $id);
-
-if (mysqli_stmt_execute($stmt)) {
-
-# HAPUS FILE FOTO (JIKA BUKAN DEFAULT) 
-    if ($foto != 'default.png' && file_exists("../uploads_penulis/" . $foto)) {
-        unlink("../uploads_penulis/" . $foto);
-    }
-
+if ($hapus) {
     echo json_encode([
-        'status' => 'sukses'
+        'status' => 'sukses',
+        'pesan' => 'Data berhasil dihapus'
     ]);
-
 } else {
     echo json_encode([
         'status' => 'gagal',
