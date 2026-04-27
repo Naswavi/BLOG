@@ -369,6 +369,139 @@ button {
   cursor: pointer;
   margin-right: 10px;
 }
+
+/* Animasi Masuk*/
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Global Styling Refinement */
+body {
+  background: #f0f2f5;
+  color: #333;
+  scroll-behavior: smooth;
+}
+
+/* Sidebar Modern */
+.sidebar .menu-box {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+}
+
+.sidebar button {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.sidebar button:hover {
+  transform: translateX(8px);
+  background: #e8f5e9;
+}
+
+.sidebar button.active {
+  background: #2e7d32 !important;
+  color: white !important;
+  box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
+}
+
+/* 4. Content Area Animation */
+#contentArea {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+/* Table Card Refresh */
+.table-card {
+  border: none;
+  border-radius: 16px;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+}
+
+.table-card:hover {
+  transform: translateY(-5px);
+}
+
+/* Button Effects */
+.btn {
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  font-size: 12px;
+}
+
+.btn:active {
+  transform: scale(0.95);
+}
+
+.btn.tambah {
+  background: linear-gradient(135deg, #4CAF50, #2E7D32);
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+}
+
+/* Form Modernization */
+.card-form {
+  border-radius: 20px;
+  animation: fadeInUp 0.5s ease-out;
+}
+
+input, textarea, select {
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+input:focus, textarea:focus, select:focus {
+  border-color: #2e7d32 !important;
+  box-shadow: 0 0 0 4px rgba(46, 125, 50, 0.1) !important;
+  outline: none;
+}
+
+/* Badge Styling */
+.badge-kategori {
+  background: #e8f5e9;
+  color: #2e7d32;
+  font-weight: 600;
+  border: 1px solid #c8e6c9;
+}
+
+/* Topbar Styling */
+.topbar {
+  background: linear-gradient(90deg, #1a232e 0%, #2f3e4e 100%);
+  border-bottom: 3px solid #4CAF50;
+}
+
+/* Hover effect pada baris tabel */
+tr {
+  transition: background-color 0.2s ease;
+}
+
+tr:hover td {
+  background-color: #f9f9f9;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #aaa;
+}
 </style>
 </head>
 
@@ -561,11 +694,22 @@ function hapusPenulis(id) {
       method: 'POST',
       body: fd
     })
-    .then(res => res.json())
+    .then(res => res.json()) // balik normal lagi
     .then(res => {
+
       if (res.status === 'sukses') {
+
+        Swal.fire('Berhasil', res.pesan, 'success');
         loadPenulis();
+
+      } else {
+        Swal.fire('Tidak bisa dihapus', res.pesan, 'error');
+
       }
+
+    })
+    .catch(() => {
+      Swal.fire('Error', 'Server bermasalah', 'error');
     });
 
   });
@@ -861,9 +1005,30 @@ function hapusKategori(id) {
     })
     .then(res => res.json())
     .then(res => {
+
       if (res.status === 'sukses') {
+
+        Swal.fire({
+          icon: 'success',
+          title: 'Berhasil',
+          text: 'Data kategori berhasil dihapus'
+        });
+
         loadKategori();
+
+      } else {
+
+        Swal.fire({
+          icon: 'error',
+          title: 'Gagal',
+          text: res.pesan
+        });
+
       }
+
+    })
+    .catch(() => {
+      Swal.fire('Error', 'Server bermasalah', 'error');
     });
 
   });
@@ -1043,9 +1208,30 @@ function hapusArtikel(id) {
     })
     .then(res => res.json())
     .then(res => {
+
       if (res.status === 'sukses') {
+
+        Swal.fire({
+          icon: 'success',
+          title: 'Berhasil',
+          text: 'Artikel berhasil dihapus'
+        });
+
         loadArtikel();
+
+      } else {
+
+        Swal.fire({
+          icon: 'error',
+          title: 'Gagal',
+          text: res.pesan
+        });
+
       }
+
+    })
+    .catch(() => {
+      Swal.fire('Error', 'Server bermasalah', 'error');
     });
 
   });
